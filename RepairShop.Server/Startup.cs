@@ -45,7 +45,9 @@ namespace RepairShop.Server
                 option.UseNpgsql(connStr);
             });
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
             services.AddRazorPages();
             services.AddSwaggerGen(c =>
             {

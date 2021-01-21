@@ -36,6 +36,15 @@ namespace RepairShop.Server.Controllers
             return displayCustomerDtos;
         }
 
+        [HttpGet("{id}")]
+        public IActionResult  GetCustomerById(int id)
+        {
+            var res = _dbContext.CustomerDataT
+                .Where(x => x.Id == id).
+                Include(x => x.TvCheckIns).ThenInclude(x=>x.TvCheckOut);
+            return Ok(res);
+        }
+
         [HttpPost]
         public IActionResult AddCustomerData(AddCustomerDto customerDto)
         {
@@ -66,6 +75,8 @@ namespace RepairShop.Server.Controllers
             return Ok();
         }
         
+        
+    
         
         
     }
