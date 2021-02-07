@@ -6,7 +6,28 @@ namespace RepairShop.Shared.Extensions
 {
     public static class DtoExtensions
     {
-        public static DisplayTvCheckInDto ToDto( this TvCheckIn tvCheckIn )
+        public static DisplayCustomerDto ToDto( this CustomerData customerData )
+        {
+            var tvchickin = customerData.TvCheckIns.FirstOrDefault(x => x.DateIn == customerData.TvCheckIns.Max(t => t.DateIn));
+            if (tvchickin != null)
+            {
+                return new DisplayCustomerDto()
+                {
+                    Name = customerData.Name,
+                    PhoneNumber = customerData.PhoneNumber,
+                    TvBrand = customerData.TvBrand,
+                    Id = customerData.Id,
+                    Failure = tvchickin.Failure,
+                    DateIn = tvchickin.DateIn,
+                    Returned = tvchickin.Returned,
+                    TvInch = customerData.TvInch
+                };
+            }
+
+            return null;
+        }
+        
+        /*public static DisplayTvCheckInDto ToDto( this TvCheckIn tvCheckIn )
         {
             return new DisplayTvCheckInDto()
             {
@@ -28,6 +49,6 @@ namespace RepairShop.Shared.Extensions
                 TvInch = customerData.TvInch
                      
             };
-        }
+        }*/
     }
 }

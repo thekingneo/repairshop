@@ -21,15 +21,28 @@ namespace RepairShop.Server.Controllers
             _dbContext = dbContext;
         }
 
-        [HttpPost]
-        public IActionResult AddCheckInToCustomer(TvCheckIn tvCheckIn)
+        [HttpPost("CheckInCustomer")]
+        public IActionResult AddCheckInToCustomer(AddCheckInToCustomerDto dto)
         {
-
+            var customer = _dbContext.CustomerDataT
+                .Where(x => x.Id == dto.CustomerDataId)
+                .Include(x => x.TvCheckIns)
+                .FirstOrDefault();
+            if (customer == null) return NotFound();
+            var newcheckin = new TvCheckIn
+            {
+                Failure = dto.Failure,
+                Returned = dto.Returned,
+                DateIn = dto.DateIn,
+                
+            };
+            customer.TvCheckIns=customer.TvCheckIns.Append(newcheckin).ToList();
+            _dbContext.SaveChanges();
             return Ok();
         }
         
         
-        [HttpPost]
+        [HttpPost("CheckOutCustomer")]
         public IActionResult CheckOutCustomer(CustomerCheckOutDto checkOutDto)
         {
             //find customer with checkins with checkouts

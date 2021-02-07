@@ -17,4 +17,8 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RepairShop.Shared\RepairShop.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

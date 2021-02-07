@@ -1,6 +1,52 @@
 ﻿@page "/ListCustomers"
+@using RepairShop.Shared.DTOs
+@inject HttpClient HttpClient;
+
 <h3>ListCustomers</h3>
+
+@if (customers == null)
+{
+    <p><em>Loading Customers ....</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Phone#</th>
+            <th>Tv</th>
+            <th>DateIn</th>
+            <th>Error</th>
+        </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in customers)
+            {
+                <tr>
+                    <td>
+                        <a href="/customerdetails/@customer.Id.ToString()">@customer.Name</a>
+                    </td>
+                    <td>@customer.PhoneNumber</td>
+                    <td>@customer.TvBrand -- @customer.TvInch</td>
+                    <td>@customer.DateIn.ToShortDateString()</td>
+                    <td>@customer.Failure</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+}
+
 
 @code {
 
+    private IEnumerable<DisplayCustomerDto> customers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        customers = await HttpClient.
+            GetFromJsonAsync<IEnumerable<DisplayCustomerDto> >("https://localhost:5001/api/CustomerData");
+     
+    }
 }

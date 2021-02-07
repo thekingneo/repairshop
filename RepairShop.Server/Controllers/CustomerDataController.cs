@@ -1,13 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using RepairShop.Server.DataBase;
 using RepairShop.Shared.DTOs;
 using RepairShop.Shared.Extensions;
 using RepairShop.Shared.Models;
-
+using AutoMapper;
 namespace RepairShop.Server.Controllers
 { 
     
@@ -17,10 +19,11 @@ namespace RepairShop.Server.Controllers
     public class CustomerDataController: ControllerBase
     {
         private readonly AppDbContext _dbContext;
-
-        public CustomerDataController(AppDbContext dbContext)
+        private readonly IMapper _mapper;
+        public CustomerDataController(AppDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
         
         
@@ -39,10 +42,15 @@ namespace RepairShop.Server.Controllers
         [HttpGet("{id}")]
         public IActionResult  GetCustomerById(int id)
         {
+  
             var res = _dbContext.CustomerDataT
-                .Where(x => x.Id == id).
-                Include(x => x.TvCheckIns).ThenInclude(x=>x.TvCheckOut);
-            return Ok(res);
+                    .Where(x => x.Id == id)
+                    .Include(x => x.TvCheckIns)
+                    .ThenInclude(x=>x.TvCheckOut)
+                    .FirstOrDefault();
+            
+         
+            return Ok(_mapper.Map<CustomerData,CustomerDto>(res));
         }
 
         [HttpPost]

@@ -1,0 +1,33 @@
+@page "/customerdetails/{CustomerId}"
+@using RepairShop.Shared.Models
+@using RepairShop.Shared.DTOs
+@inject HttpClient http
+
+<h3>CustomerDetails</h3>
+
+@if (data == null)
+{
+    <p> loading .</p>
+}
+else
+{
+    @data.Name
+    @data.TvCheckIns.FirstOrDefault().TvCheckOut?.FeePaid
+}
+ 
+@code {
+
+    private CustomerDto data;
+    
+    [Parameter]
+    public string CustomerId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+         
+        data = await http.GetFromJsonAsync<CustomerDto>("https://localhost:5001/api/CustomerData/"+CustomerId);
+       
+ 
+    }
+
+}
