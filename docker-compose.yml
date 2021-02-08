@@ -1,0 +1,18 @@
+version: "3"
+services:
+  mypostgres:
+    image: postgres:latest
+    environment: 
+      POSTGRES_USER: "username"
+      POSTGRES_PASSWORD: "secret"
+      POSTGRES_DB: "todos"
+    ports: 
+      - "5432:5432"
+  repairshop:
+    build: .
+    environment: 
+      pgHostCompose: "mypostgres"
+    ports: 
+      - "8080:80"
+    depends_on:
+      - mypostgres

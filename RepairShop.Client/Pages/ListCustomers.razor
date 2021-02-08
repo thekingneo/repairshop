@@ -45,8 +45,9 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+     Console.WriteLine(HttpClient.BaseAddress+"api/CustomerData");   
         customers = await HttpClient.
-            GetFromJsonAsync<IEnumerable<DisplayCustomerDto> >("https://localhost:5001/api/CustomerData");
+            GetFromJsonAsync<IEnumerable<DisplayCustomerDto> >("api/CustomerData");
      
     }
 }

@@ -16,10 +16,12 @@ namespace RepairShop.Client
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
-
+            //var baseAddress = builder.Configuration.GetValue<string>("BaseUrl");
+           
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             await builder.Build().RunAsync();
+          
         }
     }
 }

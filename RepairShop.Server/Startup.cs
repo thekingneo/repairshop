@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using RepairShop.Server.DataBase;
+using RepairShop.Server.Extentions;
 
 namespace RepairShop.Server
 {
@@ -33,6 +34,35 @@ namespace RepairShop.Server
                 // Use connection string from file.
                 connStr = Configuration.GetConnectionString("DbContext");
             }
+            else
+            {
+                // Use connection string provided at runtime by Heroku.
+                var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+                if (connUrl == null)
+                {
+                    var pgHostCompose = Configuration["pgHostCompose"];
+                    connStr = $"Server={pgHostCompose};Port=5432;User Id=username;Password=secret;Database=todos;";
+                }
+                else
+                {
+                    Console.WriteLine("Processing Heroku Env");
+                    // Parse connection URL to connection string for Npgsql
+                    connUrl = connUrl.Replace("postgres://", string.Empty);
+                    var pgUserPass = connUrl.Split("@")[0];
+                    var pgHostPortDb = connUrl.Split("@")[1];
+                    var pgHostPort = pgHostPortDb.Split("/")[0];
+                    var pgDb = pgHostPortDb.Split("/")[1];
+                    var pgUser = pgUserPass.Split(":")[0];
+                    var pgPass = pgUserPass.Split(":")[1];
+                    var pgHost = pgHostPort.Split(":")[0];
+                    var pgPort = pgHostPort.Split(":")[1];
+                    connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};sslmode=Prefer;Trust Server Certificate=true";
+                }
+
+
+            }
+            Console.WriteLine("Connection String : " + connStr);
 
             services.AddAutoMapper(typeof(Startup));
 
@@ -71,6 +101,8 @@ namespace RepairShop.Server
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RepairShop.Server v1"));
             }
+            PrebDb.PrepDB(app);
+            
 
             app.UseCors("devcors");
             app.UseHttpsRedirection();
