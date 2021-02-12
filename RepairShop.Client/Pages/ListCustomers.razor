@@ -51,7 +51,7 @@ else
     {
      Console.WriteLine(HttpClient.BaseAddress+"api/CustomerData");   
         customers = await HttpClient.
-            GetFromJsonAsync<IEnumerable<DisplayCustomerDto> >("api/CustomerData");
+            GetFromJsonAsync<IEnumerable<DisplayCustomerDto> >("/api/CustomerData");
      
     }
 

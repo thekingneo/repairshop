@@ -1,0 +1,25 @@
+@using RepairShop.Shared.DTOs
+@foreach (var checkin in CheckInDtos)
+{   
+    <div class="card" style="width:auto">
+        <div class="card-body">
+            <h3 class="card-text text-info text-center">Checkin @checkin.Failure</h3>
+            <h4 class="card-text text-center">@checkin.DateIn.Date.ToShortDateString() @if (checkin.Returned)
+                                                                          {
+                                                                              <span>  Returned</span>
+                                                                          } </h4>
+            <hr> 
+            @if (checkin.TvCheckOut != null)
+            {
+                <h3 class="card-text text-center text-info">Checkout @checkin.TvCheckOut.FeePaid NIS</h3>
+                <h4 class="card-text text-center">@checkin.TvCheckOut.OutDate.Date.ToShortDateString()</h4>
+
+            }
+        </div>
+    </div>
+}
+ 
+    @code {
+    [Parameter]
+    public IEnumerable<TvCheckInDto> CheckInDtos { get; set; }
+}
