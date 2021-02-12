@@ -70,7 +70,8 @@ namespace RepairShop.Server.Controllers
 
             CustomerData customerData = new CustomerData
             {
-                Id = 0, Name = customerDto.Name, 
+                Id = 0, 
+                Name = customerDto.Name, 
                 PhoneNumber = customerDto.PhoneNumber, 
                 TvBrand = customerDto.TvBrand, 
                 TvCheckIns = new []{tvCheckIn},

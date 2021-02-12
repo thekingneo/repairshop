@@ -1,7 +1,7 @@
 ﻿@page "/ListCustomers"
 @using RepairShop.Shared.DTOs
 @inject HttpClient HttpClient;
-
+@inject NavigationManager NavigationManager;
 <h3>ListCustomers</h3>
 
 @if (customers == null)
@@ -10,17 +10,20 @@
 }
 else
 {
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Phone#</th>
-            <th>Tv</th>
-            <th>DateIn</th>
-            <th>Error</th>
-        </tr>
-        </thead>
-        <tbody>
+    <div class="rounded">
+        
+    
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone#</th>
+                <th>Tv</th>
+                <th>DateIn</th>
+                <th>Error</th>
+            </tr>
+            </thead>
+            <tbody>
             @foreach (var customer in customers)
             {
                 <tr>
@@ -33,9 +36,10 @@ else
                     <td>@customer.Failure</td>
                 </tr>
             }
-        </tbody>
-    </table>
-    
+            </tbody>
+        </table>
+        <button class="btn btn-primary" @onclick="AddCustomer">Add</button>
+    </div>
 }
 
 
@@ -50,4 +54,11 @@ else
             GetFromJsonAsync<IEnumerable<DisplayCustomerDto> >("api/CustomerData");
      
     }
+
+    private void AddCustomer()
+    {
+        NavigationManager.NavigateTo("/Createcustomer");
+    }
+    
+    
 }
