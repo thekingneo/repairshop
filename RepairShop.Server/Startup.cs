@@ -1,4 +1,5 @@
 using System;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -71,7 +72,11 @@ namespace RepairShop.Server
                 option.UseNpgsql(connStr);
             });
 
-            services.AddControllers().AddNewtonsoftJson(options =>
+            services.AddControllers()
+                .AddFluentValidation(
+                    conf => conf.RegisterValidatorsFromAssemblyContaining<Startup>())
+                .AddNewtonsoftJson(
+                    options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
             services.AddCors(options =>
